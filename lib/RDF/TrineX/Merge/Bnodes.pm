@@ -1,5 +1,6 @@
 package RDF::TrineX::Merge::Bnodes;
 #ABSTRACT: Merge blank nodes that obviously refer to the same resource
+#VERSION
 
 use strict;
 use parent 'Exporter';
@@ -148,9 +149,13 @@ and connect to the same statements by their blank node.
 Statements that involve multiple blank nodes or blank nodes that are connected
 to another blank node are never removed.
 
-The method does not check whether triples are RDF-compatible: predicates must not be blank.
+The method does not check whether triples are RDF-compatible: predicates must
+not be blank.
 
-If the passed iterator emits identical statementes, these statements are not filtered out.
+No entailment.
+
+If the passed iterator emits identical statementes, these statements are not
+filtered out.
 
 Don't expect any algorithm to understand what you mean by some RDF data.
 

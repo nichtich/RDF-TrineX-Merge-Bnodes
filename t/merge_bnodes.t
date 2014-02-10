@@ -48,12 +48,12 @@ while (@tests) {
     is serialize($out), ttl($expect), $in->size . " => " . $out->size;
 }
 
-my $model = parse(ttl(<<'RDF'));
+my $model = parse(<<'RDF');
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @base   <http://example.org/> .
 
 <Alice> foaf:knows [ a foaf:Person ; foaf:name "Bob" ] .
-<Alice> foaf:knows [ a foaf:Person ; foaf:name "Bob" ] . # obviously the same
+<Alice> foaf:knows [ a foaf:Person ; foaf:name "Bob" ] .
 RDF
 
 is $model->size, 6;
