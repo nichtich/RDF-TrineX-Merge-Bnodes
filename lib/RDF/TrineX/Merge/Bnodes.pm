@@ -109,7 +109,7 @@ sub merge_bnodes {
 
     use RDF::TrineX::Merge::Bnodes;
 
-    $model = merge_bnodes($model_or_iterator);
+    $model = merge_bnodes($model_or_iterator, %options);
 
 To give an example, applying C<merge_bnodes> on this graph:
 
@@ -124,44 +124,74 @@ will remove the second Bob.
 =head1 DESCRIPTION
 
 This module exports the function B<merge_bnodes> to merge blank nodes that
-obviously refer to the same resource in an RDF graph.  In other words the
-function can be used to get rid of obviously duplicated statements.
-Obviously duplicated statements are defined as statements that
+obviously refer to the same resource in an RDF graph. The function gets passed
+a L<RDF::Trine::Model> or L<RDF::Trine::Iterator>.  The model or iterator
+should only contain RDF-compatible statements (e.g. no blank node predicates). 
+
+The function can be applied to get rid of obviously duplicated statements.
+Obviously duplicated statements are defined as following:
 
 =over
 
 =item
 
-include either a blank node subject or a blank node object,
+The statements include either a blank node subject or a blank node object.
 
 =item
 
-only differ by their blank node identifier,
+The statements only differ by their blank node identifier.
 
 =item
 
-and connect to the same statements by their blank node.
+The blank nodes are not part of any other statement that includes two blank
+nodes.
 
 =back
+
+In other words, the algorithm first finds all star subgraphs with the internal
+node as only blank nodes in the subgraph. Each subgraph is assigned a digest
+value calculated from all triples and nodes expect the blank nodes. Then
+duplicated subgraphs with same digest are removed.
 
 =head1 LIMITATIONS
 
 Statements that involve multiple blank nodes or blank nodes that are connected
 to another blank node are never removed.
 
-The method does not check whether triples are RDF-compatible: predicates must
-not be blank.
+Don't expect the algorithm to understand what you is actually meant by the
+existence of blank nodes in your data.
 
-No entailment.
+=head1 CONFIGURATION
 
-If the passed iterator emits identical statementes, these statements are not
-filtered out.
+Options can be passed as key-value pairs:
 
-Don't expect any algorithm to understand what you mean by some RDF data.
+=over
 
-=head1 TODO
+=item digest
 
-Skolemize blank nodes (with IRIs containing C<.well-known/genid/$base64>).
+A L<Digest> or the name of a Digest module, e.g. "C<MD4>". The default digest
+is L<Digest::MD5>.
+
+=back
+
+Options not implemented yet:
+
+=over
+
+=item
+
+Option to skolemize blank nodes (IRIs with C<.well-known/genid/>).
+
+=item
+
+Option to also remove entailed statements with blank nodes:
+
+    <Alice> foaf:knows [ a foaf:Person ; foaf:name "Bob" ] .
+    <Alice> foaf:knows [ a foaf:Person ] . # could also be removed
+
+=item
+
+=back
 
 =encoding utf8
 
