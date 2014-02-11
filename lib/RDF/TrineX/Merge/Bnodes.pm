@@ -172,6 +172,11 @@ Options can be passed as key-value pairs:
 A L<Digest> or the name of a Digest module, e.g. "C<MD4>". The default digest
 is L<Digest::MD5>.
 
+=item model
+
+A L<RDF::Trine::Model> that remaining statements are added to. The model is
+also returned by the merge_bnodes.
+
 =back
 
 Options not implemented yet:
@@ -190,6 +195,8 @@ Option to also remove entailed statements with blank nodes:
     <Alice> foaf:knows [ a foaf:Person ] . # could also be removed
 
 =item
+
+Option to return an iterator instead of a model for lazy processing.
 
 =back
 
