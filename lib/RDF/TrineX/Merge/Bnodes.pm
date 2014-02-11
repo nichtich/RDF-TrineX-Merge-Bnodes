@@ -1,8 +1,8 @@
+use strict;
 package RDF::TrineX::Merge::Bnodes;
 #ABSTRACT: Merge blank nodes that obviously refer to the same resource
 #VERSION
 
-use strict;
 use parent 'Exporter';
 our @EXPORT = qw(merge_bnodes);
 
