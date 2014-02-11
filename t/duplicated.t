@@ -6,7 +6,7 @@ use RDF::Trine::Iterator;
 
 sub triple {
     statement( map {
-        $_ =~ /^\?(.+)$/ ? blank("b$1") : iri($_)
+        $_ =~ /^\?(.+)$/ ? blank("b$1") : iri("x:$_")
     } split " ", $_[0] )
 }
 
@@ -16,7 +16,12 @@ sub count {
     )->size
 }
 
-is count("x:a p:a ?1", "x:a p:a ?2"), 1;
-is count("x:a p:a ?1", "x:a p:a ?1"), 1;
+is count("s p ?1", "s p ?2"), 1;
+is count("s p ?1", "s p ?1"), 1;
+
+# both blank but detected later
+is count("?1 p o", "?1 p ?2"), 2;
+is count("?1 p o", "?1 p ?1"), 2;
+is count("s p ?2", "?1 p ?2"), 2;
 
 done_testing;
